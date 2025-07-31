@@ -1,0 +1,20 @@
+
+
+{% block content %}
+<h2>Login</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+        {{ form.identifier.label_tag }}<br>
+        {{ form.identifier }}
+        {{ form.identifier.errors }}
+    </div>
+    <div>
+        {{ form.password.label_tag }}<br>
+        {{ form.password }}
+        {{ form.password.errors }}
+    </div>
+    <button type="submit">Login</button>
+</form>
+{% endblock %}

@@ -1,0 +1,38 @@
+<form id="thoughtForm" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Post Thought</button>
+</form>
+
+<div id="thoughtList">
+    {% for thought in thoughts %}
+        <p><strong>{{ thought.user.username }}</strong>: {{ thought.content }}</p>
+    {% endfor %}
+</div>
+
+<script>
+document.getElementById('thoughtForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    let form = e.target;
+    let data = new FormData(form);
+
+    fetch("{% url 'create_thought' %}", {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: data
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            let newThought = `<p><strong>${data.username}</strong>: ${data.content}</p>`;
+            document.getElementById('thoughtList').insertAdjacentHTML('afterbegin', newThought);
+            form.reset();
+        } else {
+            alert('Error: ' + JSON.stringify(data.errors));
+        }
+    });
+});
+</script>
