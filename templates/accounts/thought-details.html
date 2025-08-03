@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ksharer - Thought Details</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ964fWz3y/A+94fCqGq9x+86C9T8A54qB4k4y/e06f0fW7/n4p8aWqB4Q6w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ksharer-green: #28a745;
+            --ksharer-green-dark: #1e7e34;
+            --ksharer-gold: #FFD700;
+        }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin-bottom: 70px;
+        }
+        .navbar {
+            border-bottom: 1px solid #dee2e6;
+            background-color: #ffffff;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .navbar-brand {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            color: var(--ksharer-green);
+            font-size: 1.8rem;
+            text-decoration: none;
+        }
+        .ksharer-btn-green {
+            background-color: var(--ksharer-green);
+            color: #fff;
+            border: none;
+        }
+        .ksharer-btn-green:hover {
+            background-color: var(--ksharer-green-dark);
+            color: #fff;
+        }
+        
+        /* Nav & Avatar */
+        .user-avatar {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            object-fit: cover;
+            border: 2px solid #adb5bd;
+        }
+        .search-input-desktop {
+            width: 100%;
+            max-width: 450px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+        }
+        .search-input-desktop:focus {
+            border-color: var(--ksharer-green);
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+        }
+
+        /* Redesigned Bottom Nav for better mobile experience */
+        .bottom-nav {
+            background-color: #ffffff;
+            border-top: 1px solid #dee2e6;
+            padding: 0.75rem 0;
+            z-index: 1030;
+            bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+        }
+        .bottom-nav .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            padding: 0;
+            font-size: 0.8rem;
+            text-decoration: none;
+        }
+        .bottom-nav .nav-link i {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+        }
+        .bottom-nav .nav-link.active {
+            color: var(--ksharer-green);
+        }
+        
+        /* Card & Feed Styling (reused) */
+        .feed-container {
+            max-width: 900px;
+        }
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            background-color: #ffffff;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        .card-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card-author-info {
+            display: flex;
+            align-items: center;
+        }
+        .card-author-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+        .card-author-info .handle {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        .card-content {
+            margin-top: 1rem;
+        }
+        .card-actions {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        .card-actions .btn {
+            color: #6c757d;
+        }
+        .reward-button {
+            color: var(--ksharer-gold);
+        }
+        
+        /* Thought Details Specific */
+        .thought-details .card-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .thought-details .thought-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            background-color: #000;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+        .engagement-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            padding: 0.75rem 0;
+            border-top: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        /* Comment Section */
+        .comment-input-area {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #dee2e6;
+            margin-bottom: 1.5rem;
+        }
+        .comment-input-area .form-control {
+            border: none;
+            resize: none;
+            font-size: 1rem;
+            padding: 0.5rem;
+        }
+        .comment-input-area .form-control:focus {
+            box-shadow: none;
+        }
+        
+        /* Comment Cards */
+        .comment-card {
+            border: none;
+            background-color: transparent;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .comment-card .card-author-info img {
+            width: 40px;
+            height: 40px;
+        }
+        .comment-card .card-author-info h6 {
+            font-size: 1rem;
+        }
+        .comment-card .card-content {
+            margin-left: 4.5rem; /* Align with text, not avatar */
+        }
+        .comment-actions {
+            margin-left: 4.5rem;
+        }
+
+        /* Modal Styles (reused) */
+        .modal.fade.modal-fullscreen .modal-dialog {
+            margin: 0;
+            width: 100vw;
+            max-width: 100vw;
+            padding: 0;
+        }
+        .modal-header-nav {
+            border-bottom: none;
+        }
+        .modal-body.search-results {
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        .modal-footer.post-actions {
+            border-top: none;
+            padding-bottom: 2rem;
+        }
+        .post-input {
+            border: none;
+            resize: none;
+            font-size: 1.25rem;
+        }
+        .post-input:focus {
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar bg-white sticky-top">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center w-100 justify-content-between d-md-none">
+                <a class="navbar-brand me-0" href="#">Ksharer</a>
+                <div class="d-flex align-items-center">
+                    <div class="search-icon-mobile me-3" data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="fa-solid fa-magnifying-glass fs-5"></i>
+                    </div>
+                    <img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar" alt="User Avatar" data-bs-toggle="modal" data-bs-target="#userMenuModal">
+                </div>
+            </div>
+            <div class="d-none d-md-flex align-items-center w-100">
+                <a class="navbar-brand me-4" href="#">Ksharer</a>
+                <form class="d-flex flex-grow-1 me-4">
+                    <input class="form-control search-input-desktop mx-auto" type="search" placeholder="Search Ksharer..." aria-label="Search">
+                </form>
+                <div class="d-flex align-items-center ms-auto">
+                    <a class="nav-link mx-3" href="newsfeed.html">Home</a>
+                    <a class="nav-link mx-3" href="#"><i class="fa-solid fa-compass"></i> Explore</a>
+                    <a class="nav-link mx-3" href="#"><i class="fa-solid fa-comments"></i> Messages</a>
+                    <a class="nav-link mx-3" href="#"><i class="fa-solid fa-square-plus"></i> New Post</a>
+                    <a class="nav-link mx-3" href="#"><img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar" alt="User Avatar"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <nav class="navbar fixed-bottom bottom-nav d-md-none">
+        <div class="container-fluid d-flex justify-content-around">
+            <a class="nav-link" href="newsfeed.html">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-compass"></i>
+                <span>Explore</span>
+            </a>
+            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#newPostModal">
+                <i class="fa-solid fa-square-plus"></i>
+                <span>New Post</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-comments"></i>
+                <span>Messages</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container py-4 feed-container">
+        
+        <div class="card thought-details">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="card-author-info">
+                        <img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" alt="User Avatar">
+                        <div>
+                            <h6 class="fw-bold mb-0">Your Name<span class="handle ms-2">@yourhandle</span></h6>
+                            <small class="text-muted">1 hour ago in <a href="#">#AI</a></small>
+                        </div>
+                    </div>
+                    <div class="card-header-actions">
+                        <button class="btn btn-sm text-secondary" data-bs-toggle="modal" data-bs-target="#ellipsisModal">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p>The latest advancements in AI are truly incredible. The pace of innovation feels faster than ever before. Exciting times! I'm particularly interested in how large language models are being used to create more intuitive and personalized user experiences.</p>
+                    <img src="https://api.reliasoftware.com/uploads/openai_golang_ai_chatbot_9fbe122c31.webp" alt="Thought Image" class="thought-image">
+                </div>
+                
+                <div class="engagement-stats mt-3">
+                    <a href="#" class="text-decoration-none"><strong>124</strong> Likes</a>
+                    <a href="#" class="text-decoration-none"><strong>32</strong> Comments</a>
+                    <a href="#" class="text-decoration-none"><strong>15</strong> Shares</a>
+                </div>
+                
+                <div class="card-actions mt-3">
+                    <button class="btn btn-sm"><i class="fa-regular fa-heart me-1"></i> Like</button>
+                    <button class="btn btn-sm"><i class="fa-regular fa-comment me-1"></i> Comment</button>
+                    <button class="btn btn-sm"><i class="fa-solid fa-share-nodes me-1"></i> Share</button>
+                    <button class="btn btn-sm reward-button"><i class="fa-solid fa-coins me-1"></i> Reward</button>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="fw-bold mt-4 mb-3">Comments</h5>
+        
+        <div class="comment-input-area mb-4">
+            <img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar me-3" alt="Your Avatar">
+            <textarea class="form-control" rows="1" placeholder="Add a comment..."></textarea>
+            <button class="btn ksharer-btn-green ms-3"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+
+        <div class="comments-feed">
+            <div class="card comment-card">
+                <div class="card-body p-0">
+                    <div class="card-author-info">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=MnwzMzczOTB8MHwxfHNlYXJjaHwxfHxwcm9maWxlfGVufDB8fHx8MTY1MjY3Mjc2Mg" alt="Commenter Avatar">
+                        <div>
+                            <h6 class="fw-bold mb-0">Jane Doe<span class="handle ms-2">@jane_d</span></h6>
+                            <small class="text-muted">45 minutes ago</small>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p>I agree completely! The progress is astounding. Do you think we'll see more open-source models that rival the commercial ones soon?</p>
+                    </div>
+                    <div class="comment-actions mt-2 d-flex gap-3">
+                        <button class="btn btn-sm text-muted"><i class="fa-regular fa-heart"></i> 5</button>
+                        <button class="btn btn-sm text-muted"><i class="fa-solid fa-reply"></i> Reply</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card comment-card">
+                <div class="card-body p-0">
+                    <div class="card-author-info">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=MnwzMzczOTB8MHwxfHNlYXJjaHwzfHxwcm9maWxlfGVufDB8fHx8MTY1MjY3Mjc2Mg" alt="Commenter Avatar">
+                        <div>
+                            <h6 class="fw-bold mb-0">John Smith<span class="handle ms-2">@john_s</span></h6>
+                            <small class="text-muted">30 minutes ago</small>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p>I think so! Open-source community is a huge driver of innovation and collaboration.</p>
+                    </div>
+                    <div class="comment-actions mt-2 d-flex gap-3">
+                        <button class="btn btn-sm text-muted"><i class="fa-regular fa-heart"></i> 2</button>
+                        <button class="btn btn-sm text-muted"><i class="fa-solid fa-reply"></i> Reply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header modal-header-nav">
+                    <form class="d-flex w-100 me-2">
+                        <input class="form-control" type="search" placeholder="Search Ksharer..." aria-label="Search">
+                    </form>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body search-results">
+                    <p class="text-muted text-center mt-3">Search for people, niches, or resources.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="userMenuModal" tabindex="-1" aria-labelledby="userMenuModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4">
+                    <img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar mb-3" alt="User Avatar">
+                    <h5 class="fw-bold">Your Name</h5>
+                    <p class="text-muted">@yourhandle</p>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted"><i class="fa-solid fa-coins me-2 text-warning"></i> ZiniCoin Balance:</span>
+                        <span class="fw-bold">1,250</span>
+                    </div>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Notifications <span class="badge bg-danger ms-2">3</span></a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Communities</a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Network</a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Edit Profile</a></li>
+                    </ul>
+                    <button class="btn btn-outline-danger w-100">Log Out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header modal-header-nav">
+                    <h5 class="modal-title" id="newPostModalLabel">New Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="d-flex mb-3">
+                        <img src="https://via.placeholder.com/50x50/adb5bd/fff?text=U" class="rounded-circle me-3" alt="Your Avatar">
+                        <textarea class="form-control post-input" rows="8" placeholder="What's on your mind?"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer post-actions d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-image"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-video"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-headphones"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-link"></i></button>
+                    </div>
+                    <button class="btn ksharer-btn-green">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/b8c639f9b4.js" crossorigin="anonymous"></script>
+</body>
+</html>

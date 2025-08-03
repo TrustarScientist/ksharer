@@ -69,12 +69,15 @@
             border-color: var(--ksharer-green);
             box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
         }
+
+        /* Redesigned Bottom Nav for better mobile experience */
         .bottom-nav {
             background-color: #ffffff;
             border-top: 1px solid #dee2e6;
-            padding: 0.5rem 0;
+            padding: 0.75rem 0; /* Increased padding */
             z-index: 1030;
             bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
         }
         .bottom-nav .nav-link {
             display: flex;
@@ -82,7 +85,12 @@
             align-items: center;
             color: #6c757d;
             padding: 0;
-            font-size: 0.75rem;
+            font-size: 0.8rem; /* Increased font size */
+            text-decoration: none;
+        }
+        .bottom-nav .nav-link i {
+            font-size: 1.75rem; /* Increased icon size */
+            margin-bottom: 0.25rem;
         }
         .bottom-nav .nav-link.active {
             color: var(--ksharer-green);
@@ -209,6 +217,33 @@
             border-top-left-radius: 0.5rem;
             border-top-right-radius: 0.5rem;
         }
+
+        /* Modal Styles */
+        .modal.fade.modal-fullscreen .modal-dialog {
+            margin: 0;
+            width: 100vw;
+            max-width: 100vw;
+            padding: 0;
+        }
+        .modal-header-nav {
+            border-bottom: none;
+        }
+        .modal-body.search-results {
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        .modal-footer.post-actions {
+            border-top: none;
+            padding-bottom: 2rem;
+        }
+        .post-input {
+            border: none;
+            resize: none;
+            font-size: 1.25rem;
+        }
+        .post-input:focus {
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -270,7 +305,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div class="card-author-info">
-                        <img src="https://via.placeholder.com/50x50/adb5bd/fff?text=P" alt="User Avatar">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRksMgKvF1zyv5kEWiJfobHRMxBubKKIUob1Q&s" alt="User Avatar">
                         <div>
                             <h6 class="fw-bold mb-0">Patience Ene<span class="handle ms-2">@patience_e</span></h6>
                             <small class="text-muted">1 hour ago in <a href="#">#AI</a></small>
@@ -286,7 +321,8 @@
                 <div class="card-content">
                     <p>The latest advancements in AI are truly incredible. The pace of innovation feels faster than ever before. Exciting times!</p>
                 </div>
-                <hr class="my-3">
+
+                <!-- <hr class="my-3"> -->
                 <div class="card-actions">
                     <button class="btn btn-sm"><i class="fa-regular fa-heart me-1"></i> 124</button>
                     <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#postDetailModal"><i class="fa-regular fa-comment me-1"></i> 32</button>
@@ -298,7 +334,7 @@
 
         <div class="card resource-card">
             <div class="position-relative">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAPHesVYsVt7KKjkm_SMQSJrpCnzmVuXTtPRFIdCWEXnYacg3_XedCGSo&s" class="card-img-top resource-thumbnail" alt="Resource Thumbnail">
+                <img  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRksMgKvF1zyv5kEWiJfobHRMxBubKKIUob1Q&s" class="card-img-top resource-thumbnail" alt="Resource Thumbnail">
                 <span class="resource-badge"><i class="fa-solid fa-newspaper me-1"></i> Article</span>
                 <i class="fa-solid fa-user-shield fact-check-badge" title="Fact-checked content"></i>
             </div>
@@ -324,8 +360,7 @@
         </div>
 
         <div class="card niche-card">
-            <div class="niche-card-header bg-primary">
-                <img src="https://cdn.serif.com/affinity/img/photo/og-photo-080820220738.png" class="card-img-top" alt="Niche Banner">
+            <div class="niche-card-header" style="background-image: url('https://cdn.serif.com/affinity/img/photo/og-photo-080820220738.png'); background-size: cover; background-position: center;">
                 <div class="niche-card-logo-container">
                     <img src="https://media.istockphoto.com/id/528415916/photo/beautiful-red-rose-with-strong-contrast-on-black-background.jpg?s=170667a&w=0&k=20&c=srA4C1CIVrN_knLhk3KNw610I9dIa6oeKRFEXfSwt3U=" class="niche-card-logo" alt="Niche Logo">
                 </div>
@@ -348,7 +383,7 @@
 
         <div class="card playground-card">
             <div class="position-relative">
-                <img src="https://www.webyking.com/wp-content/uploads/2024/07/Top-Responsive-Web-Design-Examples.png" class="card-img-top playground-card-thumbnail" alt="Playground Thumbnail">
+                <img src="https://kinsta.com/wp-content/uploads/2020/08/responsive-adaptive-design.png" class="card-img-top playground-card-thumbnail" alt="Playground Thumbnail">
                 <span class="resource-badge bg-primary"><i class="fa-solid fa-vial-virus me-1"></i> Playground</span>
             </div>
             <div class="card-body">
@@ -374,41 +409,72 @@
 
     </main>
 
-    <div class="modal fade" id="ellipsisModal" tabindex="-1" aria-labelledby="ellipsisModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
-                <div class="modal-body p-0">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><button class="btn w-100 text-start">Report Content</button></li>
-                        <li class="list-group-item"><button class="btn w-100 text-start">Share</button></li>
-                        <li class="list-group-item"><button class="btn w-100 text-start" data-bs-dismiss="modal">Close</button></li>
-                    </ul>
+                <div class="modal-header modal-header-nav">
+                    <form class="d-flex w-100 me-2">
+                        <input class="form-control" type="search" placeholder="Search Ksharer..." aria-label="Search">
+                    </form>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body search-results">
+                    <p class="text-muted text-center mt-3">Search for people, niches, or resources.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="rewardModal" tabindex="-1" aria-labelledby="rewardModalLabel" aria-hidden="true">
+    <div class="modal fade" id="userMenuModal" tabindex="-1" aria-labelledby="userMenuModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Reward Post</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p>Send ZiniCoin to thank the creator for this post!</p>
-                    <div class="d-flex justify-content-around mb-3">
-                        <button class="btn btn-outline-success">5 <i class="fa-solid fa-coins"></i></button>
-                        <button class="btn btn-outline-success">10 <i class="fa-solid fa-coins"></i></button>
-                        <button class="btn btn-outline-success">25 <i class="fa-solid fa-coins"></i></button>
+                <div class="modal-body text-center p-4">
+                    <img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar mb-3" alt="User Avatar">
+                    <h5 class="fw-bold">Your Name</h5>
+                    <p class="text-muted">@yourhandle</p>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted"><i class="fa-solid fa-coins me-2 text-warning"></i> ZiniCoin Balance:</span>
+                        <span class="fw-bold">1,250</span>
                     </div>
-                    <input type="number" class="form-control mb-2" placeholder="Custom amount...">
-                    <button class="btn ksharer-btn-green w-100">Send Reward</button>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Notifications <span class="badge bg-danger ms-2">3</span></a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Communities</a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Network</a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Edit Profile</a></li>
+                    </ul>
+                    <button class="btn btn-outline-danger w-100">Log Out</button>
                 </div>
             </div>
         </div>
     </div>
-    
+
+    <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header modal-header-nav">
+                    <h5 class="modal-title" id="newPostModalLabel">New Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="d-flex mb-3">
+                        <img src="https://www.webyking.com/wp-content/uploads/2024/07/Top-Responsive-Web-Design-Examples.png" class="rounded-circle me-3" alt="Your Avatar">
+                        <textarea class="form-control post-input" rows="8" placeholder="What's on your mind?"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer post-actions d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-image"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-video"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-headphones"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-link"></i></button>
+                    </div>
+                    <button class="btn ksharer-btn-green">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/b8c639f9b4.js" crossorigin="anonymous"></script>
 </body>

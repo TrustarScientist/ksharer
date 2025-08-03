@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ksharer - Newsfeed</title>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ964fWz3y/A+94fCqGq9x+86C9T8A54qB4k4y/e06f0fW7/n4p8aWqB4Q6w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ksharer-green: #28a745; /* Your Ksharer green accent color */
+            --ksharer-green-dark: #1e7e34; /* Darker shade for hover */
+        }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin-bottom: 70px; /* Ensure space for the fixed bottom nav */
+        }
+        .navbar {
+            border-bottom: 1px solid #dee2e6;
+            background-color: #ffffff;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+        .navbar-brand {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            color: var(--ksharer-green);
+            font-size: 1.8rem;
+            text-decoration: none;
+        }
+        .navbar-brand:hover {
+            color: var(--ksharer-green-dark);
+        }
+        .nav-link {
+            color: #343a40;
+            text-decoration: none;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover {
+            color: var(--ksharer-green);
+            border-bottom-color: var(--ksharer-green);
+        }
+
+        /* User Image and Search Icon for Mobile */
+        .user-avatar-mobile {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #adb5bd;
+        }
+        .search-icon-mobile {
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .search-icon-mobile i {
+            font-size: 1.5rem;
+            color: #343a40;
+        }
+        
+        /* Desktop Search Bar and Links */
+        .search-input-desktop {
+            width: 100%;
+            max-width: 450px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+        }
+        .search-input-desktop:focus {
+            border-color: var(--ksharer-green);
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+        }
+        .user-avatar-desktop {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            border: 2px solid #adb5bd;
+        }
+
+        /* Mobile Bottom Nav */
+        .bottom-nav {
+            background-color: #ffffff;
+            border-top: 1px solid #dee2e6;
+            padding: 0.5rem 0;
+            z-index: 1030;
+            bottom: 0;
+        }
+        .bottom-nav .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            padding: 0;
+            font-size: 0.75rem;
+            text-decoration: none;
+        }
+        .bottom-nav .nav-link:hover {
+            color: var(--ksharer-green);
+        }
+        .bottom-nav .nav-link i {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+        .bottom-nav .nav-link.active {
+            color: var(--ksharer-green);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar bg-white sticky-top">
+        <div class="container-fluid">
+
+            <div class="d-flex align-items-center justify-content-between d-md-none w-100">
+                <img src="https://via.placeholder.com/40x40/adb5bd/fff?text=U" class="user-avatar-mobile" alt="User Avatar" data-bs-toggle="modal" data-bs-target="#userMenuModal">
+                
+                <a class="navbar-brand me-0" href="#">Ksharer</a>
+                
+                <div class="search-icon-mobile" data-bs-toggle="modal" data-bs-target="#searchModal">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+            </div>
+
+            <div class="d-none d-md-flex align-items-center w-100">
+                <a class="navbar-brand me-4" href="#">Ksharer</a>
+                
+                <form class="d-flex flex-grow-1 me-4">
+                    <input class="form-control d-lg-block search-input-desktop mx-auto" type="search" placeholder="Search Ksharer..." aria-label="Search">
+                </form>
+                
+                <div class="d-flex align-items-center ms-auto">
+                    <a class="nav-link mx-3 d-none d-lg-block" href="#">Home</a>
+                    <a class="nav-link mx-3" href="#">Explore</a>
+                    <a class="nav-link mx-3" href="#">New Post</a>
+                    <a class="nav-link mx-3" href="#">Profile</a>
+
+                    <img src="https://via.placeholder.com/40x40/adb5bd/fff?text=U" class="user-avatar-desktop ms-3" alt="User Avatar">
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <nav class="navbar fixed-bottom bottom-nav d-md-none">
+        <div class="container-fluid d-flex justify-content-around">
+            <a class="nav-link active" aria-current="page" href="#">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-compass"></i>
+                <span>Explore</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-square-plus"></i>
+                <span>New Post</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+    
+
+    <div class="modal fade" id="userMenuModal" tabindex="-1" aria-labelledby="userMenuModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userMenuModalLabel">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex flex-column align-items-center mb-4">
+                        <img src="https://via.placeholder.com/80x80/adb5bd/fff?text=U" class="user-avatar-mobile" style="width: 80px; height: 80px;" alt="User Avatar">
+                        <h4 class="mt-2">Username</h4>
+                        <p class="text-muted small">@username_handle</p>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-user me-2"></i> My Profile</a></li>
+                        <li class="mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-share-nodes me-2"></i> My Shares</a></li>
+                        <li class="mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-bell me-2"></i> Notifications</a></li>
+                        <li class="mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-user-group me-2"></i> Connections</a></li>
+                        <li class="mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-list me-2"></i> Communities</a></li>
+                        <li class="mb-2"><a href="#" class="nav-link"><i class="fa-solid fa-gear me-2"></i> Settings</a></li>
+                        <hr>
+                        <li class="mb-2"><a href="#" class="nav-link text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLabel">Search Ksharer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control form-control-lg" placeholder="Search..." aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </form>
+                    <div class="mt-4">
+                        <h6 class="text-muted">Suggested Searches</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">#blockchain</li>
+                            <li class="list-group-item">#web3</li>
+                            <li class="list-group-item">#ai</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <h1 class="text-center">This is the Ksharer Newsfeed</h1>
+        <p class="text-center text-muted">Resize your browser to see the responsive navigation changes.</p>
+        <div style="height: 1000px;"></div> 
+    </div>
+
+    <div class="resource-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTtxrDoxUcql-VK6Ac0kmPqXMoyAjFJB664A&s" class="resource-thumbnail" alt="Resource Thumbnail">
+            <div class="resource-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <img width="30px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTtxrDoxUcql-VK6Ac0kmPqXMoyAjFJB664A&s" class="rounded-circle me-2" alt="Author Avatar">
+                        <div class="thought-author">
+                            <h6 class="mb-0">Alex K. <span class="handle ms-1">@alexk</span></h6>
+                            <small class="text-muted">3 hours ago</small>
+                        </div>
+                    </div>
+                    <div class="thought-header-actions">
+                        <span class="resource-type me-2">Article</span>
+                        <i class="fa-solid fa-user-shield resource-fact-check me-2" title="Fact-checked content"></i>
+                        <button class="btn btn-sm text-secondary" data-bs-toggle="modal" data-bs-target="#resourcePreviewModal">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                </div>
+                <h5 class="card-title mb-3">The Future of AI in Web Development</h5>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="resource-price">
+                        <i class="fa-solid fa-coins"></i> 25 ZiniCoin
+                    </div>
+                    <button class="btn btn-primary btn-sm">View Resource</button>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">In <a href="#" class="community-tag text-decoration-none">#webdev</a> Niche</small>
+                </div>
+            </div>
+        </div>
+        <!-- ddd -->
+        <div class="resource-card">
+                    <img src="https://via.placeholder.com/700x200/28a745/fff?text=Resource+Thumbnail" class="resource-thumbnail" alt="Resource Thumbnail">
+                    <div class="resource-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40x40/adb5bd/fff?text=A" class="rounded-circle me-2" alt="Author Avatar">
+                                <div class="thought-author">
+                                    <h6 class="mb-0">Alex K. <span class="handle ms-1">@alexk</span></h6>
+                                    <small class="text-muted">3 hours ago</small>
+                                </div>
+                            </div>
+                            <div class="thought-header-actions">
+                                <span class="resource-type me-2">Article</span>
+                                <i class="fa-solid fa-user-shield resource-fact-check me-2" title="Fact-checked content"></i>
+                                <button class="btn btn-sm text-secondary" data-bs-toggle="modal" data-bs-target="#resourcePreviewModal">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h5 class="card-title mb-3">The Future of AI in Web Development</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="resource-price">
+                                <i class="fa-solid fa-coins"></i> 25 ZiniCoin
+                            </div>
+                            <button class="btn btn-primary btn-sm">View Resource</button>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">In <a href="#" class="community-tag text-decoration-none">#webdev</a> Niche</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <img src="https://via.placeholder.com/700x200/007bff/fff?text=Resource+Thumbnail" class="resource-thumbnail" alt="Resource Thumbnail">
+                    <div class="resource-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40x40/adb5bd/fff?text=L" class="rounded-circle me-2" alt="Author Avatar">
+                                <div class="thought-author">
+                                    <h6 class="mb-0">Linda P. <span class="handle ms-1">@lindap</span></h6>
+                                    <small class="text-muted">1 day ago</small>
+                                </div>
+                            </div>
+                            <div class="thought-header-actions">
+                                <span class="resource-type me-2">Course</span>
+                                <i class="fa-solid fa-user-shield resource-fact-check me-2" title="Fact-checked content"></i>
+                                <button class="btn btn-sm text-secondary" data-bs-toggle="modal" data-bs-target="#resourcePreviewModal">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h5 class="card-title mb-3">Beginner's Guide to Blockchain</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="resource-price">
+                                <i class="fa-solid fa-coins"></i> 50 ZiniCoin
+                            </div>
+                            <button class="btn btn-primary btn-sm">View Resource</button>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">In <a href="#" class="community-tag text-decoration-none">#web3</a> Niche</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <img src="https://via.placeholder.com/700x200/6c757d/fff?text=Resource+Thumbnail" class="resource-thumbnail" alt="Resource Thumbnail">
+                    <div class="resource-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40x40/adb5bd/fff?text=S" class="rounded-circle me-2" alt="Author Avatar">
+                                <div class="thought-author">
+                                    <h6 class="mb-0">Samuel T. <span class="handle ms-1">@samuelt</span></h6>
+                                    <small class="text-muted">5 hours ago</small>
+                                </div>
+                            </div>
+                            <div class="thought-header-actions">
+                                <span class="resource-type me-2">Ebook</span>
+                                <i class="fa-solid fa-user-shield resource-fact-check me-2" title="Fact-checked content"></i>
+                                <button class="btn btn-sm text-secondary" data-bs-toggle="modal" data-bs-target="#resourcePreviewModal">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h5 class="card-title mb-3">Modern Digital Marketing Strategies</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="resource-price">
+                                <i class="fa-solid fa-coins"></i> 10 ZiniCoin
+                            </div>
+                            <button class="btn btn-primary btn-sm">View Resource</button>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">In <a href="#" class="community-tag text-decoration-none">#marketing</a> Niche</small>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/b8c639f9b4.js" crossorigin="anonymous"></script>
+</body>
+</html>

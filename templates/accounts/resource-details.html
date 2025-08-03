@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ksharer - Resource Details</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ964fWz3y/A+94fCqGq9x+86C9T8A54qB4k4y/e06f0fW7/n4p8aWqB4Q6w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-radar@2.0.0/dist/chartjs-chart-radar.min.js"></script>
+    
+    <style>
+        :root {
+            --ksharer-green: #28a745;
+            --ksharer-green-dark: #1e7e34;
+            --ksharer-gold: #FFD700;
+        }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin-bottom: 70px;
+        }
+        .navbar {
+            border-bottom: 1px solid #dee2e6;
+            background-color: #ffffff;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .navbar-brand {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            color: var(--ksharer-green);
+            font-size: 1.8rem;
+            text-decoration: none;
+        }
+        .ksharer-btn-green {
+            background-color: var(--ksharer-green);
+            color: #fff;
+            border: none;
+        }
+        .ksharer-btn-green:hover {
+            background-color: var(--ksharer-green-dark);
+            color: #fff;
+        }
+        
+        /* Nav & Avatar */
+        .user-avatar {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            object-fit: cover;
+            border: 2px solid #adb5bd;
+        }
+        .search-input-desktop {
+            width: 100%;
+            max-width: 450px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+        }
+        .search-input-desktop:focus {
+            border-color: var(--ksharer-green);
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+        }
+
+        /* Redesigned Bottom Nav for better mobile experience */
+        .bottom-nav {
+            background-color: #ffffff;
+            border-top: 1px solid #dee2e6;
+            padding: 0.75rem 0;
+            z-index: 1030;
+            bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+        }
+        .bottom-nav .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            padding: 0;
+            font-size: 0.8rem;
+            text-decoration: none;
+        }
+        .bottom-nav .nav-link i {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+        }
+        .bottom-nav .nav-link.active {
+            color: var(--ksharer-green);
+        }
+        
+        /* Main Content & Card Styling */
+        .feed-container {
+            max-width: 900px;
+        }
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            background-color: #ffffff;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        .card-author-info {
+            display: flex;
+            align-items: center;
+        }
+        .card-author-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+        .card-author-info .handle {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        /* Resource Details Page Specific */
+        .resource-header {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .resource-header .resource-thumbnail {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .resource-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            line-height: 1.8;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        /* Rating Section */
+        .rating-section {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .rating-chart-container {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        .rate-resource-form .form-label {
+            font-weight: 600;
+        }
+        .rate-resource-form .form-range {
+            padding: 0;
+            cursor: pointer;
+        }
+
+        /* Related Resources Section */
+        .related-resources .card-img-top {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+        .related-resources .card-body h6 {
+            font-size: 1rem;
+        }
+        .related-resources .card-body p {
+            font-size: 0.8rem;
+        }
+
+        /* Comment & Modal Styles (reused) */
+        .comment-input-area {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #dee2e6;
+            margin-bottom: 1.5rem;
+        }
+        .comment-input-area .form-control {
+            border: none;
+            resize: none;
+            font-size: 1rem;
+            padding: 0.5rem;
+        }
+        .comment-card {
+            border: none;
+            background-color: transparent;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .comment-card .card-author-info img {
+            width: 40px;
+            height: 40px;
+        }
+        .comment-card .card-content {
+            margin-left: 4.5rem;
+        }
+
+        .modal.fade.modal-fullscreen .modal-dialog {
+            margin: 0;
+            width: 100vw;
+            max-width: 100vw;
+            padding: 0;
+        }
+        .modal-body.search-results {
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        .modal-footer.post-actions {
+            border-top: none;
+            padding-bottom: 2rem;
+        }
+        .post-input {
+            border: none;
+            resize: none;
+            font-size: 1.25rem;
+        }
+        .post-input:focus {
+            box-shadow: none;
+        }
+        .resource-modal .modal-body {
+            display: flex;
+            flex-direction: column;
+        }
+        .rating-summary .star-rating {
+            color: var(--ksharer-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar bg-white sticky-top">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center w-100 justify-content-between d-md-none">
+                <a class="navbar-brand me-0" href="#">Ksharer</a>
+                <div class="d-flex align-items-center">
+                    <div class="search-icon-mobile me-3" data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="fa-solid fa-magnifying-glass fs-5"></i>
+                    </div>
+                    <img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar" alt="User Avatar" data-bs-toggle="modal" data-bs-target="#userMenuModal">
+                </div>
+            </div>
+            <div class="d-none d-md-flex align-items-center w-100">
+                <a class="navbar-brand me-4" href="#">Ksharer</a>
+                <form class="d-flex flex-grow-1 me-4">
+                    <input class="form-control search-input-desktop mx-auto" type="search" placeholder="Search Ksharer..." aria-label="Search">
+                </form>
+                <div class="d-flex align-items-center ms-auto">
+                    <a class="nav-link mx-3" href="newsfeed.html">Home</a>
+                    <a class="nav-link mx-3" href="#"><i class="fa-solid fa-compass"></i> Explore</a>
+                    <a class="nav-link mx-3" href="#"><i class="fa-solid fa-comments"></i> Messages</a>
+                    <a class="nav-link mx-3" href="#"><i class="fa-solid fa-square-plus"></i> New Post</a>
+                    <a class="nav-link mx-3" href="#"><img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar" alt="User Avatar"></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <nav class="navbar fixed-bottom bottom-nav d-md-none">
+        <div class="container-fluid d-flex justify-content-around">
+            <a class="nav-link" href="newsfeed.html">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-compass"></i>
+                <span>Explore</span>
+            </a>
+            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#newPostModal">
+                <i class="fa-solid fa-square-plus"></i>
+                <span>New Post</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-comments"></i>
+                <span>Messages</span>
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container py-4 feed-container">
+        
+        <div class="resource-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-5">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAPHesVYsVt7KKjkm_SMQSJrpCnzmVuXTtPRFIdCWEXfSwt3U&s" alt="Resource Thumbnail" class="resource-thumbnail">
+                </div>
+                <div class="col-md-7 mt-3 mt-md-0">
+                    <h1 class="fw-bold">Mastering React Hooks</h1>
+                    <p class="text-muted lead">By <a href="#" class="text-decoration-none fw-bold">John Doe</a></p>
+                    <p class="mb-4">This comprehensive guide will take you from a React beginner to a hooks master, covering everything from `useState` to custom hooks.</p>
+
+                    <h5 class="mt-4 mb-3">Community Rating</h5>
+                    <div class="rating-chart-container">
+                        <canvas id="resourceRatingChart"></canvas>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mt-3 rating-summary">
+                        <span class="fs-4 star-rating me-2">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </span>
+                        <span class="fs-4 fw-bold">4.2</span>
+                        <small class="text-muted ms-2">(158 ratings)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="resource-content">
+            <p>Welcome to the in-depth guide on React Hooks! This resource is designed to give you a deep understanding of the most essential tools in modern React development...</p>
+            <p class="text-muted fst-italic">...[Actual resource content goes here. This could be a blog post, video player, or interactive code snippet]...</p>
+        </div>
+
+        <div class="rating-section">
+            <h4 class="fw-bold">Rate this Resource</h4>
+            <p class="text-muted">Help the community by providing your honest feedback.</p>
+            <form class="rate-resource-form">
+                <div class="mb-3">
+                    <label for="rating-neutrality" class="form-label">Neutrality</label>
+                    <input type="range" class="form-range" min="1" max="5" value="5" id="rating-neutrality">
+                </div>
+                <div class="mb-3">
+                    <label for="rating-factuality" class="form-label">Factuality</label>
+                    <input type="range" class="form-range" min="1" max="5" value="5" id="rating-factuality">
+                </div>
+                <div class="mb-3">
+                    <label for="rating-simplicity" class="form-label">Simplicity</label>
+                    <input type="range" class="form-range" min="1" max="5" value="5" id="rating-simplicity">
+                </div>
+                <div class="mb-3">
+                    <label for="rating-relevance" class="form-label">Relevance</label>
+                    <input type="range" class="form-range" min="1" max="5" value="5" id="rating-relevance">
+                </div>
+                <button type="submit" class="btn ksharer-btn-green">Submit Rating</button>
+            </form>
+        </div>
+
+        <h5 class="fw-bold mt-4 mb-3">Comments</h5>
+        <div class="comment-input-area mb-4">
+            <img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar me-3" alt="Your Avatar">
+            <textarea class="form-control" rows="1" placeholder="Add a comment..."></textarea>
+            <button class="btn ksharer-btn-green ms-3"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+        <div class="comments-feed">
+            <div class="card comment-card">
+                <div class="card-body p-0">
+                    <div class="card-author-info">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=MnwzMzczOTB8MHwxfHNlYXJjaHwxfHxwcm9maWxlfGVufDB8fHx8MTY1MjY3Mjc2Mg" alt="Commenter Avatar">
+                        <div>
+                            <h6 class="fw-bold mb-0">Jane Doe<span class="handle ms-2">@jane_d</span></h6>
+                            <small class="text-muted">2 hours ago</small>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p>This was an incredibly helpful resource. The simplicity rating is spot-on!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="fw-bold mt-4 mb-3">Related Resources</h5>
+        <div class="row related-resources">
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="https://plus.unsplash.com/premium_photo-1661274533036-7c934375b430?q=80&w=1080&auto=format&fit=crop" class="card-img-top" alt="Related Resource 1">
+                    <div class="card-body">
+                        <h6 class="card-title fw-bold">Deep Dive into Redux Toolkit</h6>
+                        <p class="card-text text-muted">By Alice Williams</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold"><i class="fa-solid fa-coins text-warning"></i> 150</span>
+                            <a href="#" class="btn ksharer-btn-green btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1593508512252-c67dcb659c47?q=80&w=1080&auto=format&fit=crop" class="card-img-top" alt="Related Resource 2">
+                    <div class="card-body">
+                        <h6 class="card-title fw-bold">Next.js for Beginners</h6>
+                        <p class="card-text text-muted">By Bob Miller</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold"><i class="fa-solid fa-coins text-warning"></i> 100</span>
+                            <a href="#" class="btn ksharer-btn-green btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=1080&auto=format&fit=crop" class="card-img-top" alt="Related Resource 3">
+                    <div class="card-body">
+                        <h6 class="card-title fw-bold">Advanced CSS Grid Layouts</h6>
+                        <p class="card-text text-muted">By Charlie Brown</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold"><i class="fa-solid fa-coins text-warning"></i> 200</span>
+                            <a href="#" class="btn ksharer-btn-green btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header modal-header-nav">
+                    <form class="d-flex w-100 me-2">
+                        <input class="form-control" type="search" placeholder="Search Ksharer..." aria-label="Search">
+                    </form>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body search-results">
+                    <p class="text-muted text-center mt-3">Search for people, niches, or resources.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="userMenuModal" tabindex="-1" aria-labelledby="userMenuModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4">
+                    <img src="https://www.shutterstock.com/image-photo/blond-hair-girl-taking-photo-260nw-2492842415.jpg" class="user-avatar mb-3" alt="User Avatar">
+                    <h5 class="fw-bold">Your Name</h5>
+                    <p class="text-muted">@yourhandle</p>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted"><i class="fa-solid fa-coins me-2 text-warning"></i> ZiniCoin Balance:</span>
+                        <span class="fw-bold">1,250</span>
+                    </div>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Notifications <span class="badge bg-danger ms-2">3</span></a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Communities</a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Network</a></li>
+                        <li class="list-group-item"><a href="#" class="btn w-100 text-start">Edit Profile</a></li>
+                    </ul>
+                    <button class="btn btn-outline-danger w-100">Log Out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header modal-header-nav">
+                    <h5 class="modal-title" id="newPostModalLabel">New Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="d-flex mb-3">
+                        <img src="https://via.placeholder.com/50x50/adb5bd/fff?text=U" class="rounded-circle me-3" alt="Your Avatar">
+                        <textarea class="form-control post-input" rows="8" placeholder="What's on your mind?"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer post-actions d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-image"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-video"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-headphones"></i></button>
+                        <button class="btn btn-outline-secondary"><i class="fa-solid fa-link"></i></button>
+                    </div>
+                    <button class="btn ksharer-btn-green">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const ctx = document.getElementById('resourceRatingChart').getContext('2d');
+        const resourceRatingChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Factuality', 'Neutrality', 'Simplicity', 'Relevance'],
+                datasets: [{
+                    label: 'Average Rating',
+                    data: [4.5, 3.8, 4.7, 4.2], // Example data
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(40, 167, 69, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(40, 167, 69, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: false
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        pointLabels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                }
+            }
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/b8c639f9b4.js" crossorigin="anonymous"></script> 
+</body>
+</html>

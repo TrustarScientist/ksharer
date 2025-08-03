@@ -4,7 +4,7 @@ from .models import Thought
 class ThoughtForm(forms.ModelForm):
     class Meta:
         model = Thought
-        fields = ['content']
+        fields = ['content', 'chained_to']
         widgets = {
             'content': forms.Textarea(attrs={
                 'placeholder': "What's on your mind?",
